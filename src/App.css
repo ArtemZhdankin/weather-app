@@ -8,6 +8,16 @@
     top: 20px;
 }
 
+.weather-summary {
+    position: relative;
+}
+
+.day-controls {
+    position: absolute;
+    top: 13px;
+    right: 20px;
+}
+
 .forecast {
     display: flex;
     justify-content: space-evenly;
@@ -95,4 +105,9 @@
 
 .header__search input:focus {
     border: 1px solid #ccc;
+}
+
+.map {
+    height: 600px;
+    position: relative;
 }
