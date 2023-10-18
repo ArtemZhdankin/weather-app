@@ -15,6 +15,7 @@ export interface CurrentWeatherData {
 }
 
 export interface WeatherLocation {
+    id: number;
     name: string;
     region: string;
     country: string;

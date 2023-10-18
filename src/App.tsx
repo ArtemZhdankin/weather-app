@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import WeatherData, { WeatherForecastSummary } from './interfaces/weather-data.interface';
+import WeatherData, { WeatherForecastSummary, WeatherLocation } from './interfaces/weather-data.interface';
 import './App.css'
 import {format} from 'date-fns'
 import classNames from 'classnames';
-import { Button } from 'react-bootstrap';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import { MapContainer, useMap } from 'react-leaflet';
 import { TileLayer } from 'react-leaflet';
 import { Marker } from 'react-leaflet';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 
 const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
   const map = useMap();
@@ -18,7 +18,7 @@ const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lo
      map.setView([lat, lon]);
    }, [lat, lon]);
    return null;
- }
+}
 
 const App = () => {
 
@@ -27,18 +27,32 @@ const App = () => {
   const [searchValue, setSearchValue] = useState<string>('')
   const [daysAmount, setDaysAmount] = useState(7)
 
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [locations, setLocations] = useState<WeatherLocation[]>([]);
+
   const dayProperties = [
-    {title: 'Temperature, C', key: 'temp_c'},
-    {title: 'Wind, Kph', key: 'wind_kph'},
-    {title: 'Chance of rain, %', key: 'chance_of_rain'},
-    {title: 'Feels like, C', key: 'feelslike_c'},
-    {title: 'Wind direction', key: 'wind_dir'},
-    {title: 'Dewpoint, C', key: 'dewpoint_c'},
-    {title: 'UV Index', key: 'uv'}
+    {value: 'Temperature, C', key: 'temp_c', selected: true},
+    {value: 'Wind, Kph', key: 'wind_kph', selected: true},
+    {value: 'Chance of rain, %', key: 'chance_of_rain', selected: true},
+    {value: 'Feels like, C', key: 'feelslike_c', selected: true},
+    {value: 'Wind direction', key: 'wind_dir', selected: true},
+    {value: 'Dewpoint, C', key: 'dewpoint_c', selected: true},
+    {value: 'UV Index', key: 'uv', selected: true}
   ]
 
+  const handleSearch = (query: string) => {
+    setIsSearchLoading(true);
+
+    fetch(`http://api.weatherapi.com/v1/search.json?key=8d79f078e4c949bb819215608231810&q=${query}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        setLocations(data);
+        setIsSearchLoading(false);
+      });
+  };
+
   const fetchData = async (query: string) => {
-    const response = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=f9ba2df78d6841d7b25214748230210&q=${query}&days=${daysAmount}&aqi=yes`, {method:'get'})
+    const response = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=8d79f078e4c949bb819215608231810&q=${query}&days=${daysAmount}&aqi=yes`, {method:'get'})
   
     if (response.ok) {
       const data = await response.json() as WeatherData
@@ -67,13 +81,26 @@ const App = () => {
 
   return (
     <div className="App">
-      <a className='logo' href="https://www.weatherapi.com/" title="Free Weather API">
-        <img src='//cdn.weatherapi.com/v4/images/weatherapi_logo.png' alt="Weather data by WeatherAPI.com" />
-      </a>
-
       <div className='header__search'>
-        <input placeholder='City name..' value={searchValue} onChange={(e) => { setSearchValue(e.target.value)} } type='text' />
-        <Button variant='primary' onClick={() => fetchData(searchValue)}>Search</Button>
+
+      <AsyncTypeahead
+          filterBy={() => true}
+          id="location-search"
+          isLoading={isSearchLoading}
+          labelKey="name"
+          minLength={3}
+          onSearch={handleSearch}
+          onChange={
+            (options: any) => { if (!options.length) return; fetchData(`${options[0].lat},${options[0].lon}`) }
+          }
+          options={locations}
+          placeholder="Enter city name.."
+          renderMenuItemChildren={(option: any) => (
+            <>
+              <span>{option.name}, {option.region}, {option.country}</span>
+            </>
+          )}
+        />
       </div>
 
       <h3 className='header'>Weather in {weatherData?.location.name}, {weatherData?.location.region}, {weatherData?.location.country}</h3>
@@ -88,11 +115,20 @@ const App = () => {
 
         <div className='day-controls'>
         <ToggleButtonGroup name='days-toggle' type="radio" value={daysAmount} onChange={(value) => setDaysAmount(value)}>
-          <ToggleButton id="tbg-btn-1" value={7}>
+          <ToggleButton id="tbg-btn-1" value={3}>
+            3 days
+          </ToggleButton>
+          <ToggleButton id="tbg-btn-2" value={5}>
+            5 days
+          </ToggleButton>
+          <ToggleButton id="tbg-btn-3" value={7}>
             7 days
           </ToggleButton>
-          <ToggleButton id="tbg-btn-2" value={10}>
+          <ToggleButton id="tbg-btn-4" value={10}>
             10 days
+          </ToggleButton>
+          <ToggleButton id="tbg-btn-5" value={14}>
+            14 days
           </ToggleButton>
         </ToggleButtonGroup>
         </div>
@@ -131,7 +167,7 @@ const App = () => {
 
             {dayProperties.map((prop, index) => {
               return <tr key={index}>
-                      <td><b>{prop.title}</b></td>
+                      <td><b>{prop.value}</b></td>
                       {activeDay?.hour.map((hour, index) => {
                           return <td key={index}>{(hour as Record<string, any>)[prop.key]}</td>
                         })}
