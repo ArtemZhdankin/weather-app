@@ -119,3 +119,30 @@
 .select__menu {
     z-index: 9999!important;
 }
+
+@media screen and (max-width: 1024px) {
+    .header__search input {
+        width: 100%;
+    }
+
+    .day-controls {
+        position: static;
+        padding: 10px;
+    }
+
+    .weather-summary {
+        padding: 10px;
+    }
+
+    .forecast {
+        flex-direction: column;
+    }
+
+    .forecast__day {
+        margin: 10px 0;
+    }
+
+    .forecast-details {
+        overflow: scroll;
+    }
+}
