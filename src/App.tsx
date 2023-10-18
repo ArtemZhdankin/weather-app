@@ -9,6 +9,7 @@ import { MapContainer, useMap } from 'react-leaflet';
 import { TileLayer } from 'react-leaflet';
 import { Marker } from 'react-leaflet';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import Select from 'react-select'
 
 const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
   const map = useMap();
@@ -24,21 +25,25 @@ const App = () => {
 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [activeDay, setActiveDay] = useState<WeatherForecastSummary | null>(null)
-  const [searchValue, setSearchValue] = useState<string>('')
   const [daysAmount, setDaysAmount] = useState(7)
 
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [locations, setLocations] = useState<WeatherLocation[]>([]);
 
   const dayProperties = [
-    {value: 'Temperature, C', key: 'temp_c', selected: true},
-    {value: 'Wind, Kph', key: 'wind_kph', selected: true},
-    {value: 'Chance of rain, %', key: 'chance_of_rain', selected: true},
-    {value: 'Feels like, C', key: 'feelslike_c', selected: true},
-    {value: 'Wind direction', key: 'wind_dir', selected: true},
-    {value: 'Dewpoint, C', key: 'dewpoint_c', selected: true},
-    {value: 'UV Index', key: 'uv', selected: true}
+    {label: 'Temperature, C', value: 'temp_c'},
+    {label: 'Wind, Kph', value: 'wind_kph'},
+    {label: 'Chance of rain, %', value: 'chance_of_rain'},
+    {label: 'Feels like, C', value: 'feelslike_c'},
+    {label: 'Wind direction', value: 'wind_dir'},
+    {label: 'Dewpoint, C', value: 'dewpoint_c'},
+    {label: 'UV Index', value: 'uv'}
   ]
+
+  const [selectedDayProperties, setSelectedDayProperties] = useState([
+    {label: 'Temperature, C', value: 'temp_c'},
+    {label: 'Wind, Kph', value: 'wind_kph'}]
+  )
 
   const handleSearch = (query: string) => {
     setIsSearchLoading(true);
@@ -147,6 +152,19 @@ const App = () => {
         }
       </div>
 
+      <div className='forecast-filter'>
+        <Select
+            defaultValue={selectedDayProperties}
+            isMulti
+            name="colors"
+            options={dayProperties as any}
+            placeholder="Filter.."
+            className="basic-multi-select"
+            classNamePrefix="select"
+            onChange={(newValue) => {setSelectedDayProperties(newValue as any)}}
+          />
+      </div>
+
       <div className='forecast-details'>
         <table>
           <thead>
@@ -165,11 +183,11 @@ const App = () => {
                 })}
             </tr>
 
-            {dayProperties.map((prop, index) => {
+            {selectedDayProperties.map((prop, index) => {
               return <tr key={index}>
-                      <td><b>{prop.value}</b></td>
+                      <td><b>{prop.label}</b></td>
                       {activeDay?.hour.map((hour, index) => {
-                          return <td key={index}>{(hour as Record<string, any>)[prop.key]}</td>
+                          return <td key={index}>{(hour as Record<string, any>)[prop.value]}</td>
                         })}
                     </tr>
             })}

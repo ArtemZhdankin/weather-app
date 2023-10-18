@@ -111,3 +111,11 @@
     height: 600px;
     position: relative;
 }
+
+.forecast-filter {
+    padding: 20px;
+}
+
+.select__menu {
+    z-index: 9999!important;
+}
