@@ -127,11 +127,11 @@ const App = () => {
 
       <div className='weather-summary'>
         <img width={64} height={64} src={weatherData?.current.condition.icon} /> 
-        <b>{weatherData?.current.condition.text}</b>&nbsp;|
-        Temperature: <b>{weatherData?.current.temp_c} C</b>&nbsp;|
-        Wind: <b>{weatherData?.current.wind_mph} {weatherData?.current.wind_dir}</b>&nbsp;|
-        Pressure: <b>{weatherData?.current.pressure_mb} Mb</b>&nbsp;|
-        Feels like: <b>{weatherData?.current.feelslike_c} C</b>
+        <b>{weatherData?.current.condition.text}</b>
+        <span>| Temperature:</span><b>{weatherData?.current.temp_c} C</b>
+        <span>| Wind:</span> <b>{weatherData?.current.wind_mph} {weatherData?.current.wind_dir}</b>
+        <span>| Pressure:</span> <b>{weatherData?.current.pressure_mb} Mb</b>
+        <span>| Feels like:</span><b>{weatherData?.current.feelslike_c} C</b>
 
         <div className='day-controls'>
         <ToggleButtonGroup name='days-toggle' type="radio" value={daysAmount} onChange={(value) => setDaysAmount(value)}>
@@ -165,6 +165,10 @@ const App = () => {
             </div>
           })
         }
+      </div>
+      
+      <div className='filter-heading'>
+      Weather monitoring features
       </div>
 
       <div className='forecast-filter'>

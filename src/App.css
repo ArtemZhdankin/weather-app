@@ -12,6 +12,23 @@
     position: relative;
 }
 
+.weather-summary > *{
+    vertical-align: middle;
+}
+
+.weather-summary > b {
+    padding-right: 5px;
+}
+
+.weather-summary > span {
+    padding-right: 5px;
+}
+
+.weather-summary img {
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
 .day-controls {
     position: absolute;
     top: 13px;
@@ -112,8 +129,14 @@
     position: relative;
 }
 
+.filter-heading {
+    padding: 20px 20px 0 20px;
+    font-size: 21px;
+    font-weight: bold;
+}
+
 .forecast-filter {
-    padding: 20px;
+    padding: 20px 20px 0 20px;
 }
 
 .select__menu {
