@@ -11,3 +11,5 @@ const Header: React.FC<HeaderProps> = ({ location }) => {
 }
 
 export default Header
+
+// Заголовок, локация для которой отображается погода

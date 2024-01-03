@@ -27,3 +27,5 @@ const Forecast: React.FC<ForecastProps> = ({ forecastDays, activeDay, onClick })
 }
 
 export default Forecast
+
+// Компонент для отображения суммарного прогноза погоды по дням (большие кубики)

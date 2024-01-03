@@ -39,3 +39,5 @@ const Map: React.FC<MapProps> = ({ location }) => {
 }
 
 export default Map
+
+//  Карта

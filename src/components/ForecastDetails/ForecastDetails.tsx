@@ -41,3 +41,5 @@ const ForecastDetails: React.FC<ForecastDetailsProps> = ({ selectedDayProperties
 }
 
 export default ForecastDetails
+
+// Таблица с детальным прогнозом

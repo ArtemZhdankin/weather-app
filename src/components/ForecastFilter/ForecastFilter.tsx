@@ -30,3 +30,5 @@ const ForecastFilter: React.FC<ForecastFilterProps> = ({ dayProperties, defaultV
 }
 
 export default ForecastFilter
+
+// Фильтр для таблицы с детальным прогнозом

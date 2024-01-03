@@ -27,3 +27,5 @@ export const DEFAULT_DAY_PROPERTIES = [
     {label: 'Wind direction', value: 'wind_dir'},
     {label: 'UV Index', value: 'uv'}
 ]
+
+// Константы 

@@ -43,3 +43,5 @@ const WeatherSummary: React.FC<WeatherSummaryProps> = ({ data, icon, daysAmount,
 }
 
 export default WeatherSummary
+
+// Коротка сводка погоды на текущий день и выбор количества дней прогноза

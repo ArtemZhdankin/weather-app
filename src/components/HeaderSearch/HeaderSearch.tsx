@@ -35,3 +35,5 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isLoading, options, onSearc
 }
 
 export default HeaderSearch
+
+// Поиск города для отображения погоды
