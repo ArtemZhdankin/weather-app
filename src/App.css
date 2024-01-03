@@ -1,6 +1,4 @@
-.header {
-    padding: 20px 20px 0 20px;
-}
+
 
 .logo {
     position: absolute;
@@ -106,23 +104,7 @@
     border-right: 1px solid #dedede;
 }
 
-.header__search {
-    padding: 20px 20px 0 20px;
-}
 
-.header__search input {
-    width: 33%;
-    margin-right: 10px;
-    border: 1px solid #dedede;
-    height: 38px;
-    border-radius: 3px;
-    vertical-align: middle;
-    padding-left: 10px;
-}
-
-.header__search input:focus {
-    border: 1px solid #ccc;
-}
 
 .map {
     height: 600px;
