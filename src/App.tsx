@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import WeatherData, { WeatherForecastSummary, WeatherLocation } from './interfaces/weather-data.interface';
 import './App.css'
 import {format} from 'date-fns'
-import classNames from 'classnames';
+
 
 import { MapContainer, useMap } from 'react-leaflet';
 import { TileLayer } from 'react-leaflet';
@@ -12,6 +12,7 @@ import Select from 'react-select'
 import Header from './components/Header/Header';
 import HeaderSearch from './components/HeaderSearch/HeaderSearch';
 import WeatherSummary from './components/WeatherSummary/WeatherSummary';
+import Forecast from './components/Forecast/Forecast';
 
 const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
   const map = useMap();
@@ -118,18 +119,11 @@ const App = () => {
         onChange={(value) => setDaysAmount(value)}
       />
 
-      <div className='forecast'>
-        {weatherData?.forecast.forecastday.map((forecastDay, index) => {
-            return <div className={classNames('forecast__day', { 'forecast__day--active': forecastDay === activeDay })} key={index} onClick={() => setActiveDay(forecastDay)}>
-              <b className='forecast__day-title'>{format(new Date(forecastDay.date + ' 12:00:00'), 'MMM, do')}</b><br/>
-              <span>{format(new Date(forecastDay.date + ' 12:00:00'), 'EEEE')}</span><br/>
-              <img width={64} height={64} src={forecastDay.day.condition.icon} /> <br/>
-              <div className='forecast__day-desc'>{forecastDay.day.condition.text}</div>
-              <div><span className='forecast__day-min'>{forecastDay.day.mintemp_c}C</span> ... <span className='forecast__day-max'>{forecastDay.day.maxtemp_c}C</span></div>
-            </div>
-          })
-        }
-      </div>
+      <Forecast
+        forecastDays={weatherData?.forecast.forecastday}
+        activeDay={activeDay} 
+        onClick={(forecastDay: WeatherForecastSummary) => setActiveDay(forecastDay)}
+      />
    
       <>
         <div className='filter-heading'>
