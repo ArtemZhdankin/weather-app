@@ -3,8 +3,7 @@ import WeatherData, { WeatherForecastSummary, WeatherLocation } from './interfac
 import './App.css'
 import {format} from 'date-fns'
 import classNames from 'classnames';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+
 import { MapContainer, useMap } from 'react-leaflet';
 import { TileLayer } from 'react-leaflet';
 import { Marker } from 'react-leaflet';
@@ -12,6 +11,7 @@ import { Marker } from 'react-leaflet';
 import Select from 'react-select'
 import Header from './components/Header/Header';
 import HeaderSearch from './components/HeaderSearch/HeaderSearch';
+import WeatherSummary from './components/WeatherSummary/WeatherSummary';
 
 const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
   const map = useMap();
@@ -109,37 +109,14 @@ const App = () => {
         onSearch={handleSearch}
         onChange={fetchData}
       />
-
       <Header location={weatherData?.location} />
 
-      <div className='weather-summary'>
-        <img width={64} height={64} src={weatherData?.current.condition.icon} /> 
-        <b>{weatherData?.current.condition.text}</b>
-        <span>| Temperature:</span><b>{weatherData?.current.temp_c} C</b>
-        <span>| Wind:</span> <b>{weatherData?.current.wind_mph} {weatherData?.current.wind_dir}</b>
-        <span>| Pressure:</span> <b>{weatherData?.current.pressure_mb} Mb</b>
-        <span>| Feels like:</span><b>{weatherData?.current.feelslike_c} C</b>
-
-        <div className='day-controls'>
-          <ToggleButtonGroup name='days-toggle' type="radio" value={daysAmount} onChange={(value) => setDaysAmount(value)}>
-            <ToggleButton id="tbg-btn-1" value={3}>
-              3 days
-            </ToggleButton>
-            <ToggleButton id="tbg-btn-2" value={5}>
-              5 days
-            </ToggleButton>
-            <ToggleButton id="tbg-btn-3" value={7}>
-              7 days
-            </ToggleButton>
-            <ToggleButton id="tbg-btn-4" value={10}>
-              10 days
-            </ToggleButton>
-            <ToggleButton id="tbg-btn-5" value={14}>
-              14 days
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-      </div>
+      <WeatherSummary
+        icon={weatherData?.current.condition.icon} 
+        data={weatherData?.current}
+        daysAmount={daysAmount}
+        onChange={(value) => setDaysAmount(value)}
+      />
 
       <div className='forecast'>
         {weatherData?.forecast.forecastday.map((forecastDay, index) => {
