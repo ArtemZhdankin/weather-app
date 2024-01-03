@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import WeatherData, { WeatherForecastSummary, WeatherLocation } from './interfaces/weather-data.interface';
 import './App.css'
-import {format} from 'date-fns'
 
 
 import { MapContainer, useMap } from 'react-leaflet';
@@ -14,6 +13,8 @@ import HeaderSearch from './components/HeaderSearch/HeaderSearch';
 import WeatherSummary from './components/WeatherSummary/WeatherSummary';
 import Forecast from './components/Forecast/Forecast';
 import ForecastFilter from './components/ForecastFilter/ForecastFilter';
+import { DAY_PROPERTIES, DEFAULT_DAY_PROPERTIES } from './utils/constants';
+import ForecastDetails from './components/ForecastDetails/ForecastDetails';
 
 const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
   const map = useMap();
@@ -34,35 +35,8 @@ const App = () => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [locations, setLocations] = useState<WeatherLocation[]>([]);
 
-  const dayProperties = [
-    {label: 'Temperature, C', value: 'temp_c'},
-    {label: 'Heat Index, C', value: 'heatindex_c'},
-    {label: 'Pressure, MB', value: 'pressure_mb'},
-    {label: 'Humidity, %', value: 'humidity'},
-    {label: 'Cloud Ceiling', value: 'cloud'},
-    {label: 'Visibility, Km', value: 'vis_km'},
-    {label: 'Chance of snow, %', value: 'chance_of_snow'},
-    {label: 'Chance of rain, %', value: 'chance_of_rain'},
-    {label: 'Wind, Kph', value: 'wind_kph'},
-    {label: 'Wind Gust, Kph', value: 'gust_kph'},
-    {label: 'Feels like, C', value: 'feelslike_c'},
-    {label: 'Wind direction', value: 'wind_dir'},
-    {label: 'Wind chill, C', value: 'windchill_c'},
-    {label: 'Dewpoint, C', value: 'dewpoint_c'},
-    {label: 'UV Index', value: 'uv'}
-  ]
-
-  const [selectedDayProperties, setSelectedDayProperties] = useState([
-    {label: 'Temperature, C', value: 'temp_c'},
-    {label: 'Feels like, C', value: 'feelslike_c'},
-    {label: 'Pressure, MB', value: 'pressure_mb'},
-    {label: 'Humidity, %', value: 'humidity'},
-    {label: 'Chance of rain, %', value: 'chance_of_rain'},
-    {label: 'Visibility, Km', value: 'vis_km'},
-    {label: 'Wind, Kph', value: 'wind_kph'},
-    {label: 'Wind direction', value: 'wind_dir'},
-    {label: 'UV Index', value: 'uv'}]
-  )
+  const dayProperties = DAY_PROPERTIES
+  const [selectedDayProperties, setSelectedDayProperties] = useState(DEFAULT_DAY_PROPERTIES)
 
   const handleSearch = (query: string) => {
     setIsSearchLoading(true);
@@ -132,35 +106,10 @@ const App = () => {
         onChange={(newValue) => {setSelectedDayProperties(newValue as any)}}
       />
 
-      <div className='forecast-details'>
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              {activeDay?.hour.map((hour, index) => {
-                return <th key={index}>{format(new Date(hour.time), 'hhaaa')}</th>
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td></td>
-              {activeDay?.hour.map((hour, index) => {
-                  return <td key={index}><img width={32} height={32} src={hour.condition.icon} /> </td>
-                })}
-            </tr>
-
-            {selectedDayProperties.map((prop, index) => {
-              return <tr key={index}>
-                      <td><b>{prop.label}</b></td>
-                      {activeDay?.hour.map((hour, index) => {
-                          return <td key={index}>{(hour as Record<string, any>)[prop.value]}</td>
-                        })}
-                    </tr>
-            })}
-          </tbody>
-        </table>
-      </div>
+      <ForecastDetails 
+        selectedDayProperties={selectedDayProperties}
+        activeDay={activeDay}
+      />
 
       { weatherData && <div className='map'>
         <MapContainer className='map' center={[weatherData.location.lat, weatherData.location.lon]} zoom={12} scrollWheelZoom={false} >

@@ -8,32 +8,7 @@
 
 
 
-.forecast-details table {
-    width: 100%;
-}
 
-.forecast-details table th,
-.forecast-details table td {
-    font-size: 12px;
-    padding: 5px;
-}
-
-.forecast-details {
-    padding: 20px;
-}
-
-.forecast-details table th {
-    font-weight: normal;
-    font-style: italic;
-}
-
-.forecast-details table tr:nth-child(odd) td {
-    background-color: #f1f1f1;
-}
-
-.forecast-details table td {
-    border-right: 1px solid #dedede;
-}
 
 
 
