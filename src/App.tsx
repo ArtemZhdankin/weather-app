@@ -8,11 +8,12 @@ import { MapContainer, useMap } from 'react-leaflet';
 import { TileLayer } from 'react-leaflet';
 import { Marker } from 'react-leaflet';
 
-import Select from 'react-select'
+
 import Header from './components/Header/Header';
 import HeaderSearch from './components/HeaderSearch/HeaderSearch';
 import WeatherSummary from './components/WeatherSummary/WeatherSummary';
 import Forecast from './components/Forecast/Forecast';
+import ForecastFilter from './components/ForecastFilter/ForecastFilter';
 
 const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
   const map = useMap();
@@ -125,24 +126,11 @@ const App = () => {
         onClick={(forecastDay: WeatherForecastSummary) => setActiveDay(forecastDay)}
       />
    
-      <>
-        <div className='filter-heading'>
-          Weather monitoring features
-        </div>
-
-        <div className='forecast-filter'>
-          <Select
-              defaultValue={selectedDayProperties}
-              isMulti
-              name="colors"
-              options={dayProperties as any}
-              placeholder="Filter.."
-              className="basic-multi-select"
-              classNamePrefix="select"
-              onChange={(newValue) => {setSelectedDayProperties(newValue as any)}}
-            />
-        </div>
-      </>
+      <ForecastFilter 
+        dayProperties={dayProperties}
+        defaultValue={selectedDayProperties}
+        onChange={(newValue) => {setSelectedDayProperties(newValue as any)}}
+      />
 
       <div className='forecast-details'>
         <table>
