@@ -8,9 +8,9 @@ import ForecastFilter from './components/ForecastFilter/ForecastFilter';
 import { DAY_PROPERTIES, DEFAULT_DAY_PROPERTIES } from './utils/constants';
 import ForecastDetails from './components/ForecastDetails/ForecastDetails';
 import Map from './components/Map/Map'
+import { getWeather, getCities } from './utils/api';
 
 const App = () => {
-
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [activeDay, setActiveDay] = useState<WeatherForecastSummary | null>(null)
   const [daysAmount, setDaysAmount] = useState(7)
@@ -21,25 +21,21 @@ const App = () => {
   const dayProperties = DAY_PROPERTIES
   const [selectedDayProperties, setSelectedDayProperties] = useState(DEFAULT_DAY_PROPERTIES)
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     setIsSearchLoading(true);
 
-    fetch(`http://api.weatherapi.com/v1/search.json?key=8d79f078e4c949bb819215608231810&q=${query}`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        setLocations(data);
-        setIsSearchLoading(false);
-      });
+    const data = await getCities(query)
+    setLocations(data);
+    setIsSearchLoading(false);
   };
 
   const fetchData = async (query: string) => {
-    const response = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=8d79f078e4c949bb819215608231810&q=${query}&days=${daysAmount}&aqi=yes`, {method:'get'})
-  
-    if (response.ok) {
-      const data = await response.json() as WeatherData
-      setWeatherData(data)
-      setActiveDay(data.forecast.forecastday[0])
-    }
+    const data = await getWeather(query, daysAmount)
+    
+    if (!data) return
+
+    setWeatherData(data)
+    setActiveDay(data.forecast.forecastday[0])
   }
 
   useEffect(() => {
@@ -49,8 +45,7 @@ const App = () => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      fetchData(`${position.coords.latitude},${position.coords.longitude}`)
-        
+      fetchData(`${position.coords.latitude},${position.coords.longitude}`)     
     }, (error) => {
       fetchData(`${50.43},${30.52}`)
     });
