@@ -7,3 +7,7 @@
 .forecast-filter {
     padding: 20px 20px 0 20px;
 }
+
+.select__menu {
+    z-index: 9999!important;
+}

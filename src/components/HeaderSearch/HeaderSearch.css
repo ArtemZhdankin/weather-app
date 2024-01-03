@@ -15,3 +15,9 @@
 .header__search input:focus {
     border: 1px solid #ccc;
 }
+
+@media screen and (max-width: 1024px) {
+    .header__search input {
+        width: 100%;
+    }
+}

@@ -24,3 +24,14 @@
     top: 13px;
     right: 20px;
 }
+
+@media screen and (max-width: 1024px) {
+    .weather-summary {
+        padding: 10px;
+    }
+
+    .day-controls {
+        position: static;
+        padding: 10px;
+    }
+}

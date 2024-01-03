@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import WeatherData, { WeatherForecastSummary, WeatherLocation } from './interfaces/weather-data.interface';
-import './App.css'
-
-
-import { MapContainer, useMap } from 'react-leaflet';
-import { TileLayer } from 'react-leaflet';
-import { Marker } from 'react-leaflet';
-
-
 import Header from './components/Header/Header';
 import HeaderSearch from './components/HeaderSearch/HeaderSearch';
 import WeatherSummary from './components/WeatherSummary/WeatherSummary';
@@ -15,16 +7,7 @@ import Forecast from './components/Forecast/Forecast';
 import ForecastFilter from './components/ForecastFilter/ForecastFilter';
 import { DAY_PROPERTIES, DEFAULT_DAY_PROPERTIES } from './utils/constants';
 import ForecastDetails from './components/ForecastDetails/ForecastDetails';
-
-const RecenterMapAutomatically: React.FC<{lat: number, lon: number}> = ({lat, lon}) => {
-  const map = useMap();
-   useEffect(() => {
-    if (!lat || !lon) return
-
-     map.setView([lat, lon]);
-   }, [lat, lon]);
-   return null;
-}
+import Map from './components/Map/Map'
 
 const App = () => {
 
@@ -85,6 +68,7 @@ const App = () => {
         onSearch={handleSearch}
         onChange={fetchData}
       />
+      
       <Header location={weatherData?.location} />
 
       <WeatherSummary
@@ -111,16 +95,7 @@ const App = () => {
         activeDay={activeDay}
       />
 
-      { weatherData && <div className='map'>
-        <MapContainer className='map' center={[weatherData.location.lat, weatherData.location.lon]} zoom={12} scrollWheelZoom={false} >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker position={[weatherData.location.lat, weatherData.location.lon]} />
-          <RecenterMapAutomatically lat={weatherData.location.lat} lon={weatherData.location.lon}/>
-        </MapContainer>
-      </div>}
+      { weatherData && <Map location={weatherData.location} /> }
     </div>
   );
 }

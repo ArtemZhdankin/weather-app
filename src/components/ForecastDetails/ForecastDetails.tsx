@@ -21,7 +21,7 @@ const ForecastDetails: React.FC<ForecastDetailsProps> = ({ selectedDayProperties
             </thead>
             <tbody>
                 <tr>
-                <td></td>
+                    <td></td>
                     {activeDay?.hour.map((hour, index) => {
                         return <td key={index}><img width={32} height={32} src={hour.condition.icon} /> </td>
                     })}
